@@ -1,20 +1,45 @@
-import { useState } from 'react'
-import bookLogo from './assets/books.png'
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import bookLogo from './assets/books.png';
+import Books from '/Users/yashpatel/Desktop/coursework/Unit3.BookBuddy.Starter/src/components/Books.jsx';
+import SingleBook from '/Users/yashpatel/Desktop/coursework/Unit3.BookBuddy.Starter/src/components/SingleBook.jsx'; 
+import Login from '/Users/yashpatel/Desktop/coursework/Unit3.BookBuddy.Starter/src/components/Login.jsx'; 
+import Register from '/Users/yashpatel/Desktop/coursework/Unit3.BookBuddy.Starter/src/components/Register.jsx'; 
+import Account from '/Users/yashpatel/Desktop/coursework/Unit3.BookBuddy.Starter/src/components/Account.jsx'; 
 
 function App() {
-  const [token, setToken] = useState(null)
+  const [token, setToken] = useState(null);
 
   return (
-    <>
-      <h1><img id='logo-image' src={bookLogo}/>Library App</h1>
+    <Router>
+      <header>
+        <h1><img id="logo" src={bookLogo} alt="Library Logo" />Library App</h1>
+        <nav>
+          <Link to="/">Home</Link>
+          {!token && (
+            <>
+              <Link to="/login">Login</Link> | 
+              <Link to="/register">Register</Link>
+            </>
+          )}
+          {token && (
+            <>
+              <Link to="/account">Account</Link> | 
+              <button onClick={() => setToken(null)}>Logout</button>
+            </>
+          )}
+        </nav>
+      </header>
 
-      <p>Complete the React components needed to allow users to browse a library catalog, check out books, review their account, and return books that they've finished reading.</p>
-
-      <p>You may need to use the `token` in this top-level component in other components that need to know if a user has logged in or not.</p>
-
-      <p>Don't forget to set up React Router to navigate between the different views of your single page application!</p>
-    </>
-  )
+      <Routes>
+        <Route path="/" element={<Books />} />
+        <Route path="/books/:bookId" element={<SingleBook />} /> 
+        <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/account" element={token ? <Account token={token} /> : <Login setToken={setToken} />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
